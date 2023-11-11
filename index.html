@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button style="border: 2px solid gray; padding: 20px;" onclick="getLocation()">Get GPS</button>
+
+    <div id="location"></div>
+    <div>Google Maps</div>
+    <a href="" id="googleMaps" target="_blank"></a>
+    <a href="" id="googleMapsSearch" target="_blank">Search</a>
+    <script>
+        function getLocation(){
+            if (navigator.geolocation) {
+        // Get the user's current position
+        navigator.geolocation.getCurrentPosition(
+            // Success callback
+            function (position) {
+                // Retrieve the latitude and longitude
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // Display the coordinates on the page
+                document.getElementById("location").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+                document.getElementById("googleMaps").setAttribute("href", `https://google.com/maps/place/${latitude},${longitude}`)
+                document.getElementById("googleMaps").innerHTML = latitude +","+longitude
+                document.getElementById("googleMapsSearch").setAttribute("href", `https://google.com/maps/search/${latitude},${longitude}`)
+            },
+            // Error callback
+            function (error) {
+                console.error("Error getting location:", error.message);
+            }
+        );
+    } else {
+        // Geolocation is not supported by the browser
+        console.error("Geolocation is not supported by your browser");
+    }
+        }
+    </script>
+</body>
+</html>
