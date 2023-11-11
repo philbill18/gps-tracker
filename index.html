@@ -51,8 +51,8 @@
        async  function sendData(){
         const url = "https://salmon-lobster-suit.cyclic.app/gps-data";
 
-        const latitude = document.querySelector("#latitude");
-        const longitude = document.querySelector("#longitude");
+        const latitude = document.querySelector("#latitude").innerText;
+        const longitude = document.querySelector("#longitude").innerText;
 
         try {
         const response = await fetch(url, {
