@@ -8,10 +8,17 @@
 <body>
     <button style="border: 2px solid gray; padding: 20px;" onclick="getLocation()">Get GPS</button>
 
-    <div id="location"></div>
+    <div id="location">
+        <div id="latitude"></div>
+        <div id="longitude"></div>
+    </div>
     <div>Google Maps</div>
     <a href="" id="googleMaps" target="_blank"></a>
     <a href="" id="googleMapsSearch" target="_blank">Search</a>
+
+    <div>
+        <div style="border: 2px solid gray; padding: 20px;" onclick="sendData()">Send to server</div>
+    </div>
     <script>
         function getLocation(){
             if (navigator.geolocation) {
@@ -24,7 +31,8 @@
                 const longitude = position.coords.longitude;
 
                 // Display the coordinates on the page
-                document.getElementById("location").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+                document.getElementById("latitude").innerHTML = latitude;
+                document.getElementById("longitude").innerHTML = longitude;
                 document.getElementById("googleMaps").setAttribute("href", `https://google.com/maps/place/${latitude},${longitude}`)
                 document.getElementById("googleMaps").innerHTML = latitude +","+longitude
                 document.getElementById("googleMapsSearch").setAttribute("href", `https://google.com/maps/search/${latitude},${longitude}`)
@@ -39,6 +47,36 @@
         console.error("Geolocation is not supported by your browser");
     }
         }
+
+       async  function sendData(){
+        const url = "https://salmon-lobster-suit.cyclic.app/gps-data";
+
+        const latitude = document.querySelector("#latitude");
+        const longitude = document.querySelector("#longitude");
+
+        try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                latitude: latitude,
+                longitude: longitude,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        // Process the server response as needed
+        console.log(responseData);
+    } catch (error) {
+        console.error('Error sending location data:', error);
+    }
+       }
     </script>
 </body>
 </html>
