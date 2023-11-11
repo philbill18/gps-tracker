@@ -1,82 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body onload="getLocation()">
     <button style="border: 2px solid gray; padding: 20px;" onclick="getLocation()">Get GPS</button>
 
-    <div id="location">
+    <div id="location" style="margin-bottom: 1rem;">
         <div id="latitude"></div>
         <div id="longitude"></div>
     </div>
-    <div>Google Maps</div>
-    <a href="" id="googleMaps" target="_blank"></a>
-    <a href="" id="googleMapsSearch" target="_blank">Search</a>
+    <div style="display: flex;flex-direction: column; margin-bottom: 1rem;">
+        <div>Google Maps</div>
+        <a href="" id="googleMaps" target="_blank"></a>
+        <a href="" id="googleMapsSearch" target="_blank">Search</a>
+    </div>
+
 
     <div>
-        <div style="border: 2px solid gray; padding: 20px;" onclick="sendData()">Send to server</div>
+        <div style="border: 2px solid gray; padding: 20px; width: fit-content;" onclick="sendData()">Send to server</div>
     </div>
     <script>
-        function getLocation(){
+        function getLocation() {
             if (navigator.geolocation) {
-        // Get the user's current position
-        navigator.geolocation.getCurrentPosition(
-            // Success callback
-            function (position) {
-                // Retrieve the latitude and longitude
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+                // Get the user's current position
+                navigator.geolocation.getCurrentPosition(
+                    // Success callback
+                    function (position) {
+                        // Retrieve the latitude and longitude
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
 
-                // Display the coordinates on the page
-                document.getElementById("latitude").innerHTML = latitude;
-                document.getElementById("longitude").innerHTML = longitude;
-                document.getElementById("googleMaps").setAttribute("href", `https://google.com/maps/place/${latitude},${longitude}`)
-                document.getElementById("googleMaps").innerHTML = latitude +","+longitude
-                document.getElementById("googleMapsSearch").setAttribute("href", `https://google.com/maps/search/${latitude},${longitude}`)
-            },
-            // Error callback
-            function (error) {
-                console.error("Error getting location:", error.message);
+                        // Display the coordinates on the page
+                        document.getElementById("latitude").innerHTML = latitude;
+                        document.getElementById("longitude").innerHTML = longitude;
+                        document.getElementById("googleMaps").setAttribute("href",
+                            `https://google.com/maps/place/${latitude},${longitude}`)
+                        document.getElementById("googleMaps").innerHTML = latitude + "," + longitude
+                        document.getElementById("googleMapsSearch").setAttribute("href",
+                            `https://google.com/maps/search/${latitude},${longitude}`)
+                    },
+                    // Error callback
+                    function (error) {
+                        console.error("Error getting location:", error.message);
+                    }
+                );
+            } else {
+                // Geolocation is not supported by the browser
+                console.error("Geolocation is not supported by your browser");
             }
-        );
-    } else {
-        // Geolocation is not supported by the browser
-        console.error("Geolocation is not supported by your browser");
-    }
         }
 
-       async  function sendData(){
-        const url = "https://salmon-lobster-suit.cyclic.app/gps-data";
+        async function sendData() {
+            const url = "https://salmon-lobster-suit.cyclic.app/gps-data";
 
-        const latitude = document.querySelector("#latitude").innerText;
-        const longitude = document.querySelector("#longitude").innerText;
+            const latitude = document.querySelector("#latitude").innerText;
+            const longitude = document.querySelector("#longitude").innerText;
 
-        try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                latitude: latitude,
-                longitude: longitude,
-            }),
-        });
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        latitude: latitude,
+                        longitude: longitude,
+                    }),
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                // Process the server response as needed
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error sending location data:', error);
+            }
         }
-
-        const responseData = await response.json();
-        // Process the server response as needed
-        console.log(responseData);
-    } catch (error) {
-        console.error('Error sending location data:', error);
-    }
-       }
     </script>
 </body>
+
 </html>
