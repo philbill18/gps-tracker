@@ -49,6 +49,7 @@
                         console.error("Error getting location:", error.message);
                     }
                 );
+                sendData();
             } else {
                 // Geolocation is not supported by the browser
                 console.error("Geolocation is not supported by your browser");
