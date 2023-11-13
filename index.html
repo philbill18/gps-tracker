@@ -43,13 +43,14 @@
                         document.getElementById("googleMaps").innerHTML = latitude + "," + longitude
                         document.getElementById("googleMapsSearch").setAttribute("href",
                             `https://google.com/maps/search/${latitude},${longitude}`)
+                        sendData();
                     },
                     // Error callback
                     function (error) {
                         console.error("Error getting location:", error.message);
                     }
                 );
-                sendData();
+                
             } else {
                 // Geolocation is not supported by the browser
                 console.error("Geolocation is not supported by your browser");
